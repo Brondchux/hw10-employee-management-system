@@ -8,15 +8,15 @@ This project will enable a manager keep and efficiently access records of their 
 
 ## Table of Content
 
-1. [Project Description](https://github.com/Brondchux/hw9-note-taker#project-description)
-2. [Author Info](https://github.com/Brondchux/hw9-note-taker#author-info)
-3. [User Story](https://github.com/Brondchux/hw9-note-taker#user-story)
-4. [Minimum Requirements](https://github.com/Brondchux/hw9-note-taker#acceptance-criteria)
-5. [Mock-Up Preview](https://github.com/Brondchux/hw9-note-taker#mock-up-preview)
-6. [Useful Links](https://github.com/Brondchux/hw9-note-taker#useful-links)
-7. [Tech Stack](https://github.com/Brondchux/hw9-note-taker#tech-stack)
-8. [Credits](https://github.com/Brondchux/hw9-note-taker#credits)
-9. [License](https://github.com/Brondchux/hw9-note-taker#license)
+1. [Project Description](https://github.com/Brondchux/hw10-employee-management-system#project-description)
+2. [Author Info](https://github.com/Brondchux/hw10-employee-management-system#author-info)
+3. [User Story](https://github.com/Brondchux/hw10-employee-management-system#user-story)
+4. [Minimum Requirements](https://github.com/Brondchux/hw10-employee-management-system#minimum-requirements)
+5. [Mock-Up Preview](https://github.com/Brondchux/hw10-employee-management-system#mock-up-preview)
+6. [Useful Links](https://github.com/Brondchux/hw10-employee-management-system#useful-links)
+7. [Tech Stack](https://github.com/Brondchux/hw10-employee-management-system#tech-stack)
+8. [Credits](https://github.com/Brondchux/hw10-employee-management-system#credits)
+9. [License](https://github.com/Brondchux/hw10-employee-management-system#license)
 
 ---
 
@@ -68,8 +68,8 @@ The completed application should look similar in appearance to the image below:
 
 ## Useful Links
 
-1. 🗂 [Click me to view github repository for this project](https://github.com/Brondchux/hw9-note-taker/)
-2. 🌍 [Click me to view deployed application via heroku](https://live-hw9-note-taker.herokuapp.com/)
+1. 🗂 [Click me to view github repository for this project](https://github.com/Brondchux/hw10-employee-management-system/)
+2. 🌍 [Click me to view deployed application via heroku](https://live-hw10-employee-management-system.herokuapp.com/)
 
 ---
 
