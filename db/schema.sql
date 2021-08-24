@@ -4,7 +4,7 @@ CREATE DATABASE employee_tracker_db;
 
 USE employee_tracker_db;
 
-CREATE TABLE employee(
+CREATE TABLE employees (
     id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
     firstname VARCHAR(25) NOT NULL,
     lastname VARCHAR(25) NOT NULL,
@@ -12,18 +12,18 @@ CREATE TABLE employee(
     manager_id INTEGER
 );
 
-CREATE TABLE role (
+CREATE TABLE roles (
     id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL NOT NULL,
     department_id INTEGER
 );
 
-CREATE TABLE department (
+CREATE TABLE departments (
     id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
     name VARCHAR(30) NOT NULL
 );
 
-SELECT * FROM employee;
-SELECT * FROM role;
-SELECT * FROM department;
+SELECT * FROM employees;
+SELECT * FROM roles;
+SELECT * FROM departments;

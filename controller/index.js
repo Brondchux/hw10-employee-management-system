@@ -1,6 +1,6 @@
 // DEPENDENCIES ==================
 const Inquirer = require("inquirer");
-const { addRole, viewRoles, removeRole, updateRole } = require("./roles");
+const { addRole, viewRoles, removeRole } = require("./roles");
 const {
 	addEmployee,
 	viewEmployees,
