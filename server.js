@@ -94,23 +94,40 @@ connection.connect((err) => {
 
 // Add employee
 const addEmployee = async () => {
-	// Ask questions & receive answers
-	const answers = await inquirer.prompt([
-		{
-			message: "What is the employee firstname?",
-			type: "input",
-			name: "firstname",
-		},
-		{
-			message: "What is the employee lastname?",
-			type: "input",
-			name: "lastname",
-		},
-	]);
-	connection.query("INSERT INTO employees SET ?", answers, (err, result) => {
-		if (err) return console.log(`Unable to addEmployee due to error: ${err}`);
-		console.log(`Employee added successfully!`);
-		init();
+	connection.query("SELECT id, title FROM roles", async (err, result) => {
+		if (err)
+			return console.log(`Unable to listDepartments due to error: ${err}`);
+		const rolesArray = result.map(({ id, title }) => `${id} ${title}`);
+
+		// Ask questions & receive answers
+		const answers = await inquirer.prompt([
+			{
+				message: "What is the employee firstname?",
+				type: "input",
+				name: "firstname",
+			},
+			{
+				message: "What is the employee lastname?",
+				type: "input",
+				name: "lastname",
+			},
+			{
+				message: "What is the employee role?",
+				type: "list",
+				name: "role_id",
+				choices: rolesArray,
+			},
+		]);
+		connection.query(
+			"INSERT INTO employees SET ?",
+			{ ...answers, role_id: answers.role_id.split(" ")[0] },
+			(err) => {
+				if (err)
+					return console.log(`Unable to addEmployee due to error: ${err}`);
+				console.log(`Employee added successfully!`);
+				init();
+			}
+		);
 	});
 };
 
@@ -125,79 +142,85 @@ const viewEmployees = () => {
 
 // Remove employee
 const removeEmployee = async () => {
-	connection.query("SELECT * FROM employees", async (err, result) => {
-		if (err) console.log(`Unable to listEmployees due to error: ${err}`);
+	connection.query(
+		"SELECT id, firstname, lastname FROM employees",
+		async (err, result) => {
+			if (err) console.log(`Unable to listEmployees due to error: ${err}`);
 
-		const employeeNames = result.map(
-			({ id, firstname, lastname }) => `${id} ${firstname} ${lastname}`
-		);
+			const employeeNames = result.map(
+				({ id, firstname, lastname }) => `${id} ${firstname} ${lastname}`
+			);
 
-		// Ask questions & receive answers
-		const answers = await inquirer.prompt([
-			{
-				message: "Which employee will you like to remove?",
-				type: "list",
-				name: "deleteEmployeeId",
-				choices: employeeNames,
-			},
-		]);
-		({ deleteEmployeeId } = answers);
-		connection.query(
-			"DELETE FROM employees WHERE ?",
-			{ id: deleteEmployeeId.split(" ")[0] },
-			(err, result) => {
-				if (err)
-					return console.log(`Unable to removeEmployee due to error: ${err}`);
-				console.log(`Employee removed successfully!`);
-			}
-		);
+			// Ask questions & receive answers
+			const answers = await inquirer.prompt([
+				{
+					message: "Which employee will you like to remove?",
+					type: "list",
+					name: "deleteEmployeeId",
+					choices: employeeNames,
+				},
+			]);
+			({ deleteEmployeeId } = answers);
+			connection.query(
+				"DELETE FROM employees WHERE ?",
+				{ id: deleteEmployeeId.split(" ")[0] },
+				(err) => {
+					if (err)
+						return console.log(`Unable to removeEmployee due to error: ${err}`);
+					console.log(`Employee removed successfully!`);
+				}
+			);
 
-		init();
-	});
+			init();
+		}
+	);
 };
 
 // Update employee
 const updateEmployeeRole = () => {
-	connection.query("SELECT * FROM employees", async (err, result) => {
-		if (err) console.log(`Unable to listEmployees due to error: ${err}`);
+	connection.query(
+		"SELECT id, firstname, lastname FROM employees",
+		async (err, result) => {
+			if (err) console.log(`Unable to listEmployees due to error: ${err}`);
 
-		const employeeNames = result.map(
-			({ id, firstname, lastname }) => `${id} ${firstname} ${lastname}`
-		);
+			const employeeNames = result.map(
+				({ id, firstname, lastname }) => `${id} ${firstname} ${lastname}`
+			);
 
-		// Ask questions & receive answers
-		const answers = await inquirer.prompt([
-			{
-				message: "Which employee will you like to update their role?",
-				type: "list",
-				name: "updateEmployeeId",
-				choices: employeeNames,
-			},
-			{
-				message: "Select a new role for employee?",
-				type: "list",
-				name: "updatedEmployeeRole",
-				choices: employeeNames,
-			},
-		]);
-		({ updateEmployeeId, updatedEmployeeRole } = answers);
-		connection.query(
-			"UPDATE employees SET role = ? WHERE id = ?",
-			[updatedEmployeeRole, updateEmployeeId.split(" ")[0]],
-			(err, result) => {
-				if (err)
-					return console.log(`Unable to removeEmployee due to error: ${err}`);
-				console.log(`Employee updated successfully!`);
-			}
-		);
+			// Ask questions & receive answers
+			const answers = await inquirer.prompt([
+				{
+					message: "Which employee will you like to update their role?",
+					type: "list",
+					name: "updateEmployeeId",
+					choices: employeeNames,
+				},
+				{
+					message: "Select a new role for employee?",
+					type: "list",
+					name: "updatedEmployeeRole",
+					choices: employeeNames,
+				},
+			]);
+			({ updateEmployeeId, updatedEmployeeRole } = answers);
+			connection.query(
+				"UPDATE employees SET role = ? WHERE id = ?",
+				[updatedEmployeeRole, updateEmployeeId.split(" ")[0]],
+				(err) => {
+					if (err)
+						return console.log(`Unable to removeEmployee due to error: ${err}`);
+					console.log(`Employee updated successfully!`);
+				}
+			);
 
-		init();
-	});
+			init();
+		}
+	);
 };
 
 // Add role
 const addRole = async () => {
-	connection.query("SELECT * FROM departments", async (err, result) => {
+	connection.query("SELECT id, name FROM departments", async (err, result) => {
 		if (err)
 			return console.log(`Unable to listDepartments due to error: ${err}`);
 		const departmentsArray = result.map(({ id, name }) => `${id} ${name}`);
