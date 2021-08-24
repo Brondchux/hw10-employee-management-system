@@ -36,28 +36,28 @@ const initQuestions = () => {
 const allowedActions = ({ userChoice }) => {
 	switch (userChoice) {
 		case "Add Employee":
-			addEmployee();
+			addEmployee(); // done
 			break;
 		case "Add Department":
-			addDepartment();
+			addDepartment(); // done
 			break;
 		case "Add Role":
-			addRole();
+			addRole(); // done
 			break;
 		case "View Employees":
 			viewEmployees();
 			break;
 		case "View Departments":
-			viewDepartments();
+			viewDepartments(); // done
 			break;
 		case "View Roles":
-			viewRoles();
+			viewRoles(); // done
 			break;
 		case "Update Employee Roles":
-			updateEmployeeRole();
+			updateEmployeeRole(); // done
 			break;
 		case "Remove Employee":
-			removeEmployee();
+			removeEmployee(); // done
 			break;
 		case "Remove Department":
 			removeDepartment();
@@ -95,8 +95,7 @@ connection.connect((err) => {
 // Add employee
 const addEmployee = async () => {
 	connection.query("SELECT id, title FROM roles", async (err, result) => {
-		if (err)
-			return console.log(`Unable to listDepartments due to error: ${err}`);
+		if (err) return console.log(`Unable to listRoles due to error: ${err}`);
 		const rolesArray = result.map(({ id, title }) => `${id} ${title}`);
 
 		// Ask questions & receive answers
@@ -170,7 +169,6 @@ const removeEmployee = async () => {
 					console.log(`Employee removed successfully!`);
 				}
 			);
-
 			init();
 		}
 	);
@@ -183,37 +181,45 @@ const updateEmployeeRole = () => {
 		async (err, result) => {
 			if (err) console.log(`Unable to listEmployees due to error: ${err}`);
 
-			const employeeNames = result.map(
+			const employeesArray = result.map(
 				({ id, firstname, lastname }) => `${id} ${firstname} ${lastname}`
 			);
 
-			// Ask questions & receive answers
-			const answers = await inquirer.prompt([
-				{
-					message: "Which employee will you like to update their role?",
-					type: "list",
-					name: "updateEmployeeId",
-					choices: employeeNames,
-				},
-				{
-					message: "Select a new role for employee?",
-					type: "list",
-					name: "updatedEmployeeRole",
-					choices: employeeNames,
-				},
-			]);
-			({ updateEmployeeId, updatedEmployeeRole } = answers);
-			connection.query(
-				"UPDATE employees SET role = ? WHERE id = ?",
-				[updatedEmployeeRole, updateEmployeeId.split(" ")[0]],
-				(err) => {
-					if (err)
-						return console.log(`Unable to removeEmployee due to error: ${err}`);
-					console.log(`Employee updated successfully!`);
-				}
-			);
+			connection.query("SELECT id, title FROM roles", async (err, result) => {
+				if (err) return console.log(`Unable to listRoles due to error: ${err}`);
+				const rolesArray = result.map(({ id, title }) => `${id} ${title}`);
 
-			init();
+				// Ask questions & receive answers
+				const answers = await inquirer.prompt([
+					{
+						message: "Which employee will you like to update their role?",
+						type: "list",
+						name: "updateEmployeeId",
+						choices: employeesArray,
+					},
+					{
+						message: "Select a new role for employee?",
+						type: "list",
+						name: "updatedEmployeeRole",
+						choices: rolesArray,
+					},
+				]);
+				({ updateEmployeeId, updatedEmployeeRole } = answers);
+
+				connection.query(
+					"UPDATE employees SET role_id = ? WHERE id = ?",
+					[updatedEmployeeRole.split(" ")[0], updateEmployeeId.split(" ")[0]],
+					(err) => {
+						if (err)
+							return console.log(
+								`Unable to updateEmployee due to error: ${err}`
+							);
+						console.log(`Employee updated successfully!`);
+					}
+				);
+
+				init();
+			});
 		}
 	);
 };
@@ -265,6 +271,36 @@ const viewRoles = () => {
 	});
 };
 
+// Remove role
+const removeRole = async () => {
+	connection.query("SELECT id, title FROM roles", async (err, result) => {
+		if (err) console.log(`Unable to listRoles due to error: ${err}`);
+
+		const rolesArray = result.map(({ id, title }) => `${id} ${title}`);
+
+		// Ask questions & receive answers
+		const answers = await inquirer.prompt([
+			{
+				message: "Which role will you like to remove?",
+				type: "list",
+				name: "deleteRoleId",
+				choices: rolesArray,
+			},
+		]);
+		({ deleteRoleId } = answers);
+		connection.query(
+			"DELETE FROM roles WHERE ?",
+			{ id: deleteRoleId.split(" ")[0] },
+			(err) => {
+				if (err)
+					return console.log(`Unable to removeRole due to error: ${err}`);
+				console.log(`Role removed successfully!`);
+			}
+		);
+		init();
+	});
+};
+
 // Add department
 const addDepartment = async () => {
 	// Ask questions & receive answers
@@ -288,6 +324,36 @@ const viewDepartments = () => {
 		if (err)
 			return console.log(`Unable to viewDepartments due to error: ${err}`);
 		console.table("\nShowing all departments", result);
+		init();
+	});
+};
+
+// Remove department
+const removeDepartment = async () => {
+	connection.query("SELECT id, name FROM departments", async (err, result) => {
+		if (err) console.log(`Unable to listDepartments due to error: ${err}`);
+
+		const departmentsArray = result.map(({ id, name }) => `${id} ${name}`);
+
+		// Ask questions & receive answers
+		const answers = await inquirer.prompt([
+			{
+				message: "Which department will you like to remove?",
+				type: "list",
+				name: "deleteDepartmentId",
+				choices: departmentsArray,
+			},
+		]);
+		({ deleteDepartmentId } = answers);
+		connection.query(
+			"DELETE FROM departments WHERE ?",
+			{ id: deleteDepartmentId.split(" ")[0] },
+			(err) => {
+				if (err)
+					return console.log(`Unable to removeDepartment due to error: ${err}`);
+				console.log(`Department removed successfully!`);
+			}
+		);
 		init();
 	});
 };
