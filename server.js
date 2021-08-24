@@ -197,23 +197,39 @@ const updateEmployeeRole = () => {
 
 // Add role
 const addRole = async () => {
-	// Ask questions & receive answers
-	const answers = await inquirer.prompt([
-		{
-			message: "What is the role title?",
-			type: "input",
-			name: "title",
-		},
-		{
-			message: "What is the role salary?",
-			type: "input",
-			name: "salary",
-		},
-	]);
-	connection.query("INSERT INTO roles SET ?", answers, (err, result) => {
-		if (err) return console.log(`Unable to addRole due to error: ${err}`);
-		console.log(`Role added successfully!`);
-		init();
+	connection.query("SELECT * FROM departments", async (err, result) => {
+		if (err)
+			return console.log(`Unable to listDepartments due to error: ${err}`);
+		const departmentsArray = result.map(({ id, name }) => `${id} ${name}`);
+
+		// Ask questions & receive answers
+		const answers = await inquirer.prompt([
+			{
+				message: "What is the role title?",
+				type: "input",
+				name: "title",
+			},
+			{
+				message: "What is the role salary?",
+				type: "input",
+				name: "salary",
+			},
+			{
+				message: "Select a department for this role?",
+				type: "list",
+				name: "department_id",
+				choices: departmentsArray,
+			},
+		]);
+		connection.query(
+			"INSERT INTO roles SET ?",
+			{ ...answers, department_id: answers.department_id.split(" ")[0] },
+			(err) => {
+				if (err) return console.log(`Unable to addRole due to error: ${err}`);
+				console.log(`Role added successfully!`);
+				init();
+			}
+		);
 	});
 };
 
