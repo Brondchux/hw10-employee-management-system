@@ -137,7 +137,7 @@ const viewEmployees = () => {
 		`SELECT employees.id, CONCAT(employees.firstname, " ", employees.lastname) AS employee, roles.title AS role, roles.salary, departments.name AS department
 		FROM employees
 		RIGHT JOIN roles ON employees.role_id = roles.id
-		INNER JOIN departments ON roles.id = departments.id`,
+		INNER JOIN departments ON roles.id = departments.id ORDER BY employees.id DESC`,
 		(err, result) => {
 			if (err)
 				return console.log(`Unable to viewEmployees due to error: ${err}`);
