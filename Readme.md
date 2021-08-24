@@ -70,6 +70,7 @@ The completed application should look similar in appearance to the image below:
 
 1. 🗂 [Click me to view github repository for this project](https://github.com/Brondchux/hw10-employee-management-system/)
 2. 🌍 [Click me to view deployed application via heroku](https://live-hw10-employee-management.herokuapp.com/)
+3. 📺 [Click me to watch functionality video via screencastify](https://drive.google.com/file/d/12yWMt4ei-KCtK0mfkCYM8JstcutAeCpB/view)
 
 ---
 
