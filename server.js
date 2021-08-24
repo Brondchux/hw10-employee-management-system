@@ -88,9 +88,8 @@ const connection = mysql.createConnection({
 });
 
 connection.connect((err) => {
-	if (err) {
+	if (err)
 		return console.log(`Unable to connect to database due to error: \n ${err}`);
-	}
 });
 
 // Add employee
@@ -109,9 +108,7 @@ const addEmployee = async () => {
 		},
 	]);
 	connection.query("INSERT INTO employees SET ?", answers, (err, result) => {
-		if (err) {
-			console.log(`Unable to addEmployee due to error: ${err}`);
-		}
+		if (err) return console.log(`Unable to addEmployee due to error: ${err}`);
 		console.log(`Employee added successfully!`);
 		init();
 	});
@@ -120,9 +117,7 @@ const addEmployee = async () => {
 // View employees
 const viewEmployees = () => {
 	connection.query("SELECT * FROM employees", (err, result) => {
-		if (err) {
-			console.log(`Unable to viewEmployees due to error: ${err}`);
-		}
+		if (err) return console.log(`Unable to viewEmployees due to error: ${err}`);
 		console.table("\nShowing all employees", result);
 		init();
 	});
@@ -151,7 +146,8 @@ const removeEmployee = async () => {
 			"DELETE FROM employees WHERE ?",
 			{ id: deleteEmployeeId.split(" ")[0] },
 			(err, result) => {
-				if (err) console.log(`Unable to removeEmployee due to error: ${err}`);
+				if (err)
+					return console.log(`Unable to removeEmployee due to error: ${err}`);
 				console.log(`Employee removed successfully!`);
 			}
 		);
@@ -161,7 +157,101 @@ const removeEmployee = async () => {
 };
 
 // Update employee
-const updateEmployeeRole = () => {};
+const updateEmployeeRole = () => {
+	connection.query("SELECT * FROM employees", async (err, result) => {
+		if (err) console.log(`Unable to listEmployees due to error: ${err}`);
+
+		const employeeNames = result.map(
+			({ id, firstname, lastname }) => `${id} ${firstname} ${lastname}`
+		);
+
+		// Ask questions & receive answers
+		const answers = await inquirer.prompt([
+			{
+				message: "Which employee will you like to update their role?",
+				type: "list",
+				name: "updateEmployeeId",
+				choices: employeeNames,
+			},
+			{
+				message: "Select a new role for employee?",
+				type: "list",
+				name: "updatedEmployeeRole",
+				choices: employeeNames,
+			},
+		]);
+		({ updateEmployeeId, updatedEmployeeRole } = answers);
+		connection.query(
+			"UPDATE employees SET role = ? WHERE id = ?",
+			[updatedEmployeeRole, updateEmployeeId.split(" ")[0]],
+			(err, result) => {
+				if (err)
+					return console.log(`Unable to removeEmployee due to error: ${err}`);
+				console.log(`Employee updated successfully!`);
+			}
+		);
+
+		init();
+	});
+};
+
+// Add role
+const addRole = async () => {
+	// Ask questions & receive answers
+	const answers = await inquirer.prompt([
+		{
+			message: "What is the role title?",
+			type: "input",
+			name: "title",
+		},
+		{
+			message: "What is the role salary?",
+			type: "input",
+			name: "salary",
+		},
+	]);
+	connection.query("INSERT INTO roles SET ?", answers, (err, result) => {
+		if (err) return console.log(`Unable to addRole due to error: ${err}`);
+		console.log(`Role added successfully!`);
+		init();
+	});
+};
+
+// View roles
+const viewRoles = () => {
+	connection.query("SELECT * FROM roles", (err, result) => {
+		if (err) return console.log(`Unable to viewRoles due to error: ${err}`);
+		console.table("\nShowing all roles", result);
+		init();
+	});
+};
+
+// Add department
+const addDepartment = async () => {
+	// Ask questions & receive answers
+	const answers = await inquirer.prompt([
+		{
+			message: "What is the department name?",
+			type: "input",
+			name: "name",
+		},
+	]);
+	connection.query("INSERT INTO departments SET ?", answers, (err, result) => {
+		if (err) return console.log(`Unable to addDepartment due to error: ${err}`);
+		console.log(`Department added successfully!`);
+		init();
+	});
+};
+
+// View departments
+const viewDepartments = () => {
+	connection.query("SELECT * FROM departments", (err, result) => {
+		if (err)
+			return console.log(`Unable to viewDepartments due to error: ${err}`);
+		console.table("\nShowing all departments", result);
+		init();
+	});
+};
 
 // INITIALIZATION =================
 init();
