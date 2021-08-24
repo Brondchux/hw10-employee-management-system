@@ -45,7 +45,7 @@ const allowedActions = ({ userChoice }) => {
 			addRole(); // done
 			break;
 		case "View Employees":
-			viewEmployees();
+			viewEmployees(); // done
 			break;
 		case "View Departments":
 			viewDepartments(); // done
@@ -60,10 +60,10 @@ const allowedActions = ({ userChoice }) => {
 			removeEmployee(); // done
 			break;
 		case "Remove Department":
-			removeDepartment();
+			removeDepartment(); // done
 			break;
 		case "Remove Role":
-			removeRole();
+			removeRole(); // done
 			break;
 		default:
 			console.log(
@@ -132,11 +132,19 @@ const addEmployee = async () => {
 
 // View employees
 const viewEmployees = () => {
-	connection.query("SELECT * FROM employees", (err, result) => {
-		if (err) return console.log(`Unable to viewEmployees due to error: ${err}`);
-		console.table("\nShowing all employees", result);
-		init();
-	});
+	// connection.query("SELECT * FROM employees", (err, result) => {
+	connection.query(
+		`SELECT employees.id, CONCAT(employees.firstname, " ", employees.lastname) AS employee, roles.title AS role, roles.salary, departments.name AS department
+		FROM employees
+		RIGHT JOIN roles ON employees.role_id = roles.id
+		INNER JOIN departments ON roles.id = departments.id`,
+		(err, result) => {
+			if (err)
+				return console.log(`Unable to viewEmployees due to error: ${err}`);
+			console.table("\nShowing all employees", result);
+			init();
+		}
+	);
 };
 
 // Remove employee
